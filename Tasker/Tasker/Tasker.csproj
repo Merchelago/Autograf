@@ -21,6 +21,7 @@
   <ItemGroup>
     <None Remove="Presentation\CreateGoalPage.xaml" />
     <None Remove="Presentation\GoalPage.xaml" />
+    <None Remove="Presentation\MainPage.xaml" />
     <None Remove="Presentation\UpdateGoalPage.xaml" />
   </ItemGroup>
 
@@ -59,6 +60,14 @@
 
   <ItemGroup>
     <AdditionalFiles Remove="Presentation\UpdateGoalPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Presentation\MainPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Remove="Presentation\MainPage.xaml" />
   </ItemGroup>
 
 </Project>

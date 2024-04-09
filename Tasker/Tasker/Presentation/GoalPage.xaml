@@ -1,5 +1,6 @@
 ﻿<Page
     x:Class="Tasker.Presentation.GoalPage"
+    x:Name="peopleView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:Tasker.Presentation"
@@ -9,25 +10,8 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="auto"/>
-      <RowDefinition/>
-    </Grid.RowDefinitions>
-
-      <Grid Grid.Column="0" HorizontalAlignment="Center" Margin="30">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="2*"/>
-          <ColumnDefinition Width="2*"/>
-          <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-          <Button Grid.Column="0" Margin="5,5,5,5" >Создать задачу</Button>
-          <Button Grid.Column="1" Margin="5,5,5,5">Создать задачу</Button>
-          <Button Grid.Column="2" Margin="5,5,5,5">Создать задачу</Button>
-      </Grid>
-   
-    
-      <mvux:FeedView Source="{Binding Goals}" Grid.Row="1">
+  <Grid>
+    <mvux:FeedView Source="{Binding Goals}" Grid.Row="1">
         <DataTemplate>
           <ListView ItemsSource="{Binding Data}">
 
@@ -41,6 +25,10 @@
                 <TextBlock Text="{Binding Id}"></TextBlock>
                 
                 <TextBlock Text="{Binding GoalName}"/>
+
+                <Button Content="Remove"                                    
+                    Command="{Binding DataContext.RemoveGoal, ElementName=peopleView}"
+                    CommandParameter="{Binding}" />
               </StackPanel>
               </DataTemplate>
             </ListView.ItemTemplate>

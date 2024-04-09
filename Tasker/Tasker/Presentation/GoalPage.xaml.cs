@@ -22,13 +22,12 @@ namespace Tasker.Presentation;
 /// </summary>
 public sealed partial class GoalPage : Page
 {
-    
-    public GoalPage()
+    public GoalPage ()
     {
         this.InitializeComponent();
-        this.DataContext = new BindableGoalModel(new GoalService());
+        
+       
         
     }
-
     
 }

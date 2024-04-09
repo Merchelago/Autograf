@@ -1,10 +1,15 @@
 {
-	"profiles": {
-		"Tasker.Windows (Unpackaged)": {
-			"commandName": "Project"
-		},
-		"Tasker.Windows (Package)": {
-			"commandName": "MsixPackage"
-		}
-	}
+  "profiles": {
+    "Tasker.Windows (Unpackaged)": {
+      "commandName": "Project",
+      "hotReloadEnabled": true
+    },
+    "Tasker.Windows (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    }
+  }
 }

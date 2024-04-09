@@ -21,7 +21,7 @@
     <PropertyGroup>
         <!-- Uncomment each line for each platform that you want to build: -->
 
-        <!-- <OverrideTargetFramework Condition="''!='hint: Windows App Sdk (WinUI)'">$(DotNetVersion)-windows10.0.19041.0</OverrideTargetFramework> -->
+        <OverrideTargetFramework Condition="''!='hint: Windows App Sdk (WinUI)'">$(DotNetVersion)-windows10.0.19041.0</OverrideTargetFramework>
         <!-- <OverrideTargetFramework Condition="''!='hint: WASM, Skia'">$(DotNetVersion)</OverrideTargetFramework> -->
         <!-- <OverrideTargetFramework Condition="''!='hint: iOS'">$(DotNetVersion)-ios</OverrideTargetFramework> -->
         <!-- <OverrideTargetFramework Condition="''!='hint: Android'">$(DotNetVersion)-android</OverrideTargetFramework> -->

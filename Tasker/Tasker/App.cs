@@ -36,14 +36,16 @@ public class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellModel)),
+            new ViewMap<MainPage, GoalModel>(),
             new ViewMap<GoalPage, GoalModel>(),
             new ViewMap<CreateGoalPage, GoalModel>()
-        );
+        ) ;
 
         routes.Register(
             new RouteMap("", View: views.FindByViewModel<ShellModel>(),
                 Nested: new RouteMap[]
                 {
+                    new RouteMap("Main", View: views.FindByViewModel<GoalModel>()),
                     new RouteMap("Goal", View: views.FindByViewModel<GoalModel>()),
                     new RouteMap("CreateGoal", View: views.FindByViewModel<GoalModel>())
                 }

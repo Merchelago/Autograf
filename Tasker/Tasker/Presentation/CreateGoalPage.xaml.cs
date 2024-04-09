@@ -26,7 +26,8 @@ namespace Tasker.Presentation
 		public CreateGoalPage()
 		{
 			this.InitializeComponent();
-            this.DataContext = new BindableGoalModel(new GoalService());
         }
-	}
+
+        
+    }
 }

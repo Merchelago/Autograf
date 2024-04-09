@@ -6,9 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:mvux="using:Uno.Extensions.Reactive.UI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
+    <StackPanel Orientation="Horizontal">
 
-    </Grid>
+      <TextBox PlaceholderText="Goal name" DataContext="{Binding NewGoal}"
+				 Text="{Binding GoalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+      <!-- NewPerson is a generated class inheriting from Bindable<T>
+    (https://github.com/unoplatform/uno.extensions/blob/main/src/Uno.Extensions.Reactive/Presentation/Bindings/Bindable.cs)
+    and its Value property is a generated addition that exposes the actual model it's wrapped around, in our example the Person -->
+      <Button Content="Add" Command="{Binding AddGoal}"
+                CommandParameter="{Binding NewGoal.Value}" />
+    </StackPanel>
+  </Grid>
 </Page>
