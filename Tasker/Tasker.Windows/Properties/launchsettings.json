@@ -1,0 +1,10 @@
+{
+	"profiles": {
+		"Tasker.Windows (Unpackaged)": {
+			"commandName": "Project"
+		},
+		"Tasker.Windows (Package)": {
+			"commandName": "MsixPackage"
+		}
+	}
+}
