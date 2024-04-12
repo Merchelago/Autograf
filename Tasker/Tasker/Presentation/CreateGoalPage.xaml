@@ -9,11 +9,12 @@
     xmlns:mvux="using:Uno.Extensions.Reactive.UI"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-    <StackPanel Orientation="Horizontal">
-
-      <TextBox PlaceholderText="Goal name" DataContext="{Binding NewGoal}"
-				 Text="{Binding GoalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+  <Grid Width="500" Height="300" Background="Green">
+    <StackPanel Orientation="Horizontal" BorderThickness="2"
+                BorderBrush="Black" Background="#423838" Height="auto" VerticalAlignment="Center" Spacing="10">
+      
+      <TextBox PlaceholderText="Goal name" DataContext="{Binding NewGoal}" Padding="10,0,10,0" Margin="10,0,0,0"
+				 Text="{Binding GoalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  Width="auto" Height="auto"/>
 
       <!-- NewPerson is a generated class inheriting from Bindable<T>
     (https://github.com/unoplatform/uno.extensions/blob/main/src/Uno.Extensions.Reactive/Presentation/Bindings/Bindable.cs)

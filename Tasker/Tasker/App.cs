@@ -14,7 +14,8 @@ public class App : Application
 #if DEBUG
                 // Switch to Development environment when running in DEBUG
                 .UseEnvironment(Environments.Development)
-#endif
+#endif          
+                
                 .ConfigureServices((context, services) =>
                 {
                     // TODO: Register your services
@@ -22,6 +23,7 @@ public class App : Application
                     services.AddSingleton<IGoalService, GoalService>();
                 })
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
+                
             );
         MainWindow = builder.Window;
 
