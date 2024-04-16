@@ -11,4 +11,10 @@ public interface IGoalService
     ValueTask<int> AddGoal(Goal goal, CancellationToken ct = default);
     ValueTask UpdateGoal(int goalId, CancellationToken ct = default);
     ValueTask RemoveGoal(int goalId, CancellationToken ct = default);
+    ValueTask<IImmutableList<Goal>> GetGoalAsync(uint pageSize, uint firstItemIndex, CancellationToken ct);
+
+    ValueTask<uint> GetPageCount(uint pageSize, CancellationToken ct);
+
+    ValueTask<(IImmutableList<Goal> CurrentPage, int? NextGoalIdCursor)> GetGoalAsync(int? goalIdCursor, uint pageSize, CancellationToken ct);
+
 }

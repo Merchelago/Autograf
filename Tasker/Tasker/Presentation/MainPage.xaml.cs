@@ -42,12 +42,12 @@ public sealed partial class MainPage : Page
     }
     private void NavigateToMain(object sender, RoutedEventArgs e)
     {
-        if (!(MainFrame.Content is GoalPage))
+        if (!(MainFrame.Content is GoalPaginationPage))
         {
             var goalModel = this.DataContext;
 
             this.DataContext = goalModel;
-            MainFrame.Navigate(typeof(GoalPage), this.DataContext);
+            MainFrame.Navigate(typeof(GoalPaginationPage), this.DataContext);
         }
     }
 }
