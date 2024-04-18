@@ -24,7 +24,8 @@
         <StackPanel Padding="10" Grid.Column="0" Orientation="Horizontal">
           <Button Margin="5,5,5,5" Click="NavigateToMain" Background="#0d0c0c">Задачи</Button>
           <Button Margin="5,5,5,5" Click="NavigateToCreateGoal" Background="#0d0c0c">Создать задачу</Button>
-          
+          <Button Margin="5,5,5,5" Click="NavigateToGoalPagination" Background="#0d0c0c">Пагинация</Button>
+
 
       </StackPanel>
     </Grid>

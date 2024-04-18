@@ -14,8 +14,8 @@ public class App : Application
 #if DEBUG
                 // Switch to Development environment when running in DEBUG
                 .UseEnvironment(Environments.Development)
-#endif          
-                
+#endif
+
                 .ConfigureServices((context, services) =>
                 {
                     // TODO: Register your services
@@ -23,8 +23,8 @@ public class App : Application
                     services.AddSingleton<IGoalService, GoalService>();
                 })
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
-                
-            );
+                .UseSerialization()
+            ) ;
         MainWindow = builder.Window;
 
 #if DEBUG
@@ -40,7 +40,8 @@ public class App : Application
             new ViewMap(ViewModel: typeof(ShellModel)),
             new ViewMap<MainPage, GoalModel>(),
             new ViewMap<GoalPage, GoalModel>(),
-            new ViewMap<CreateGoalPage, GoalModel>()
+            new ViewMap<CreateGoalPage, GoalModel>(),
+            new ViewMap<GoalPaginationPage, GoalModel>()
         ) ;
 
         routes.Register(
@@ -49,7 +50,8 @@ public class App : Application
                 {
                     new RouteMap("Main", View: views.FindByViewModel<GoalModel>()),
                     new RouteMap("Goal", View: views.FindByViewModel<GoalModel>()),
-                    new RouteMap("CreateGoal", View: views.FindByViewModel<GoalModel>())
+                    new RouteMap("CreateGoal", View: views.FindByViewModel<GoalModel>()),
+                    new RouteMap("GoalPagination", View: views.FindByViewModel<GoalModel>())
                 }
             )
         );

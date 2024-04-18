@@ -9,30 +9,42 @@ namespace Tasker.Business.Services;
 public partial record Goal(int Id, string GoalName);
 public class GoalService : IGoalService
 {
-    private HttpClient _httpClient = new HttpClient();
+
+    private List<Goal> _goals = new();
+
+    public async ValueTask<List<Goal>> GoalsJsonGet()
+    {
+
+        // string apiUrl = "data.json";
+        string url = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        using FileStream fileStream = File.OpenRead($"{url}\\data.json");
+        var goals = await Task.Run(()=>JsonSerializer.Deserialize<Goal[]>(fileStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }));
+        return [.. goals];
+    }
+    public async ValueTask<ImmutableList<Goal>> GoalsJsonGet1()
+    {
+
+        // string apiUrl = "data.json";
+        string url = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        using FileStream fileStream = File.OpenRead($"{url}\\data.json");
+        var goals = await Task.Run(() => JsonSerializer.Deserialize<Goal[]>(fileStream, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }));
+        return [.. goals];
+    }
+    public void GoalsJsonSet()
+    {
+        
+       // string apiUrl = "data.json";
+        string url = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        string jsonString = JsonSerializer.Serialize(_goals);
+        File.WriteAllText($"{url}\\data.json", jsonString);
+        
+    }
     public async ValueTask<ImmutableList<Goal>> GetGoals(CancellationToken ct = default)
     {
-        string apiUrl = "http://vhrweb.ru:8000/tasks";
-        try
-        {
-            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
+        var goals = await Task.Run(() => GoalsJsonGet1());
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseData = await response.Content.ReadAsStringAsync();
-                var goals = JsonSerializer.Deserialize<Goal[]>(responseData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                _goals.AddRange(goals);
-                return [.. _goals];
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Произошла ошибка при выполнении запроса", ex);
-            
-        }
-        return ImmutableList<Goal>.Empty;
-
-        // return [.. _goals];
+        return [.. (await goals)];
+        
     }
 
     public async ValueTask<int> AddGoal(Goal goal, CancellationToken ct = default)
@@ -41,6 +53,7 @@ public class GoalService : IGoalService
         var newId = GenerateNewId();
 
         _goals.Add(goal with {Id = newId});
+        GoalsJsonSet();
         return newId;
     }
 
@@ -53,6 +66,7 @@ public class GoalService : IGoalService
     {
         await Task.Delay(500, ct);
         _goals.RemoveAll(goal => goal.Id == goalId);
+        GoalsJsonSet();
     }
 
     private int GenerateNewId() => _goals.DefaultIfEmpty().Max(goal => goal?.Id ?? default) + 1;
@@ -60,29 +74,12 @@ public class GoalService : IGoalService
     public async ValueTask<IImmutableList<Goal>> GetGoalAsync(uint pageSize, uint firstItemIndex, CancellationToken ct)
     {
         var (size, count) = ((int)pageSize, (int)firstItemIndex);
-        string apiUrl = "http://vhrweb.ru:8000/tasks";
-        try
-        {
-            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseData = await response.Content.ReadAsStringAsync();
-                var goals = JsonSerializer.Deserialize<Goal[]>(responseData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                _goals.AddRange(goals);
-                return _goals
-                    .Skip(count)
-                    .Take(size)
-                    .ToImmutableList();
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Произошла ошибка при выполнении запроса", ex);
-
-        }
-        return ImmutableList<Goal>.Empty;
-
+        var coll = await Task.Run(()=> GoalsJsonGet());
+        return coll.Result
+            .Skip(count)
+            .Take(size)
+            .ToImmutableList();
     }
 
     public async ValueTask<uint> GetPageCount(uint pageSize, CancellationToken ct)=> 
@@ -91,40 +88,20 @@ public class GoalService : IGoalService
 
     public async ValueTask<(IImmutableList<Goal> CurrentPage, int? NextGoalIdCursor)> GetGoalAsync(int? goalIdCursor, uint pageSize, CancellationToken ct)
     {
-        string apiUrl = "http://vhrweb.ru:8000/tasks";
-        try
-        {
-            HttpResponseMessage response = await _httpClient.GetAsync(apiUrl);
+        await Task.Run(()=> GoalsJsonGet());
+        var collection = _goals
+            .Where(goal => goal.Id >= goalIdCursor.GetValueOrDefault())
+            .Take((int)pageSize + 1)
+            .ToArray();
 
-            if (response.IsSuccessStatusCode)
-            {
-                string responseData = await response.Content.ReadAsStringAsync();
-                var goals = JsonSerializer.Deserialize<Goal[]>(responseData, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                _goals.AddRange(goals);
-                var collection = _goals
-                    .Where(goal => goal.Id >= goalIdCursor.GetValueOrDefault())
-                    .Take((int)pageSize + 1)
-                    .ToImmutableList();
+        var noMoreItems = collection.Length <= pageSize;
 
-                var noMoreItems = collection.Count <= pageSize;
+        // use the last item as the cursor of next page, if it exceeds the page-size
+        var lastIndex = noMoreItems ? ^0 : ^1;
+        var nextGoalIdCursor = noMoreItems ? default(int?) : collection[^1].Id;
 
-                // use the last item as the cursor of next page, if it exceeds the page-size
-                var lastIndex = noMoreItems ? ^0 : ^1;
-                var nextGoalIdCursor = noMoreItems ? default(int?) : collection[^1].Id;
-
-                return (CurrentPage: collection[..lastIndex].ToImmutableList(), NextPersonIdCursor: nextGoalIdCursor);
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Произошла ошибка при выполнении запроса", ex);
-
-        }
-        ....
+        return (CurrentPage: collection[..lastIndex].ToImmutableList(), NextGoalIdCursor: nextGoalIdCursor);
     }
 
-    private List<Goal> _goals = new() { 
-        new(1, "nake"),
-        new(2, "have")
-    };
+    
 }

@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace Tasker.Business.Services;
 public interface IGoalService
 {
+    ValueTask<List<Goal>> GoalsJsonGet();
+    void GoalsJsonSet();
     ValueTask<ImmutableList<Goal>> GetGoals(CancellationToken ct = default);
     ValueTask<int> AddGoal(Goal goal, CancellationToken ct = default);
     ValueTask UpdateGoal(int goalId, CancellationToken ct = default);
