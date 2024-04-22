@@ -1,0 +1,124 @@
+﻿<Page x:Class="BlueT.Presentation.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:BlueT.Presentation"
+      xmlns:uen="using:Uno.Extensions.Navigation.UI"
+      xmlns:utu="using:Uno.Toolkit.UI"
+      xmlns:um="using:Uno.Material"
+      xmlns:mvux="using:Uno.Extensions.Reactive.UI"
+      NavigationCacheMode="Required"
+      Background="{ThemeResource BackgroundBrush}">
+
+  <Page.Resources>
+    <Style x:Key="TextBoxBottomBorder" TargetType="TextBox">
+      <Setter Property="Background" Value="Transparent"/>
+      <Setter Property="BorderThickness" Value="0,0,0,1"/>
+      <Setter Property="BorderBrush" Value="White"/>
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Padding" Value="0"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="TextBox">
+            <Grid>
+              <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                  <VisualState x:Name="Normal"/>
+                  <VisualState x:Name="Disabled"/>
+                  <VisualState x:Name="PointerOver"/>
+                  <VisualState x:Name="Focused">
+                    <Storyboard>
+                      <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BorderElement">
+                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
+                      </ObjectAnimationUsingKeyFrames>
+                      <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
+                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+                      </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                  </VisualState>
+                </VisualStateGroup>
+              </VisualStateManager.VisualStateGroups>
+              <Border x:Name="BorderElement" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                <ScrollViewer x:Name="ContentElement" AutomationProperties.AccessibilityView="Raw" BorderThickness="0" IsTabStop="False" Padding="{TemplateBinding Padding}" />
+              </Border>
+            </Grid>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </Page.Resources>
+
+
+  <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="1*"/>
+      <ColumnDefinition Width="auto"/>
+      <ColumnDefinition Width="1*"/>
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="1*"/>
+      <RowDefinition Height="100"/>
+    </Grid.RowDefinitions>
+
+    <!-- Поиск -->
+    
+    <Border Grid.Row="0" Grid.Column="1" Background="#3d3d3d" BorderBrush="#525252" CornerRadius="30,30,30,30" Width="200" Height="50" Margin="0,50">
+      <Grid Margin="15,10,15,10">
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="auto"/>
+          <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="1*"/>
+          <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Image Grid.RowSpan="2" Grid.Column="0" Source="ms-appx:///BlueT/Assets/Icons/lope.png" Width="20"  Height="25" Margin="5,0,0,5"/>
+        <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3"/>
+
+        <!--<border grid.row="1" grid.column="1" background="white" cornerradius="30,30,30,30" horizontalalignment="stretch" height="2"/>-->
+      </Grid>
+    </Border>
+
+    <!-- Спосок устройств -->
+    <mvux:FeedView Source="{Binding Devices}" Grid.Row="1" Grid.Column="0" Background="#3d3d3d" Margin="50,50,50,50" CornerRadius="10,10,10,10">
+      <DataTemplate>
+        <ListView  ItemsSource="{Binding Data}">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
+                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5"/>
+              </StackPanel>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+      </DataTemplate>
+    </mvux:FeedView>
+    <!-- Спосок найденных устройств -->
+      
+
+    <Border Grid.Column="1" Grid.Row="1" BorderThickness="2" Background="White" BorderBrush="White" Width="4"/>
+    <mvux:FeedView Source="{Binding DevicesSearch}" Grid.Row="1" Grid.Column="2" Background="#3d3d3d" Margin="50,50,50,50" CornerRadius="10,10,10,10">
+      <DataTemplate>
+        <ListView  ItemsSource="{Binding Data}">
+          <ListView.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
+                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5"/>
+              </StackPanel>
+            </DataTemplate>
+          </ListView.ItemTemplate>
+        </ListView>
+      </DataTemplate>
+    </mvux:FeedView>
+    <Border Grid.ColumnSpan="3" Grid.Row="2" BorderThickness="2" Background="Transparent" BorderBrush="Transparent"/>
+  </Grid>
+</Page>

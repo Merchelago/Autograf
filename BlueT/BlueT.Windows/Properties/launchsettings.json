@@ -1,0 +1,10 @@
+{
+	"profiles": {
+		"BlueT.Windows (Unpackaged)": {
+			"commandName": "Project"
+		},
+		"BlueT.Windows (Package)": {
+			"commandName": "MsixPackage"
+		}
+	}
+}
