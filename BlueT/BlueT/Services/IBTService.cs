@@ -14,4 +14,8 @@ public interface IBTService
     Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct);
 
     IAsyncEnumerable<ImmutableList<Device>> SerchDevicesAsync(CancellationToken ct);
+
+    ValueTask<int> GetAllItems(CancellationToken ct);
+    IAsyncEnumerable<int> GetCurrentItems(CancellationToken ct);
+    IAsyncEnumerable<int> GetCurrentItemsSearch(CancellationToken ct);
 }

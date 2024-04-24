@@ -20,7 +20,9 @@ public partial record BTModel(IBTService BTService)
               }).AsListFeed();
     public IState<string> Search => State<string>.Value(this, () => "");
 
-
+    public IState<int> CurrentItemsDevices => State.AsyncEnumerable(this, BTService.GetCurrentItems);
+    public IState<int> AllItemsDevices => State.Async(this, BTService.GetAllItems);
+    public IState<int> CurrentItemsDevicesSearch => State.AsyncEnumerable(this, BTService.GetCurrentItemsSearch);
 
     /*public IListFeed<Device> Devices => ListFeed.Async(async (ct) => await BTService.ScanScanDevicesAsync(ct));*/
     /*public IListFeed<Device> DevicesSearch => Search

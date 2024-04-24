@@ -14,19 +14,19 @@ public class BTService : IBTService
 {
     private int nameId = 0;
     private string? _searchName = string.Empty;
+    private int _allDevices = 50;
+    private int _serchedDevices = 0;
     public BTService() {
         Task.Run(DeleteDevicesAsync, CancellationToken.None);
     }
 
-    private List<Device> _devices = new() {
-        new(1, "DeviceName", "DeviceType"),
-    };
+    private List<Device> _devices = new();
 
     public string SearchName { get => _searchName; set => _searchName = value; }
 
     public async Task CreateDevicesAsync()
     {
-        if (_devices.Count == 50) return;
+        if (_devices.Count == _allDevices) return;
         await Task.Delay(2000);
         var random = new Random();
         string deviceType = RandomDeviceType(random);
@@ -58,6 +58,7 @@ public class BTService : IBTService
     {
         while (!ct.IsCancellationRequested)
         {
+
             yield return [.. _devices];
             await Task.Run(CreateDevicesAsync, ct);      
         }
@@ -77,14 +78,39 @@ public class BTService : IBTService
 
     public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
     {
-
+        _serchedDevices = 0;
         if (searchTerm == "")  return _devices.ToImmutableList();
         await Task.Delay(10, ct); // имитация поиска
         var result = _devices.Where(d =>
             d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
+        _serchedDevices = result.ToList().Count;
         return result.ToImmutableList();
 
     }
+
+    public async ValueTask<int> GetAllItems(CancellationToken ct)
+    {
+        await Task.Delay(10, ct);
+        return _allDevices;
+    }
+
+    public async IAsyncEnumerable<int> GetCurrentItems([EnumeratorCancellation] CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            await Task.Delay(2000, ct);
+            yield return _devices.Count;
+        }
+    }
+    public async IAsyncEnumerable<int> GetCurrentItemsSearch([EnumeratorCancellation] CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            await Task.Delay(10, ct);
+            yield return _serchedDevices;
+        }
+    }
+
     private string CreateName()
     {
         int id = nameId + 1;
@@ -105,4 +131,5 @@ public class BTService : IBTService
         return deviceTypes[random.Next(deviceTypes.Length)];
     }
 
+    
 }

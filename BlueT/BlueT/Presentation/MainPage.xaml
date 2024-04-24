@@ -85,43 +85,70 @@
       </Grid>
     </Border>
 
-    <!-- Спосок устройств -->
-    <mvux:FeedView Source="{Binding Devices}" Grid.Row="1" Grid.Column="0" Background="#3d3d3d" Margin="50,50,50,50" CornerRadius="10,10,10,10">
-      <DataTemplate>
-        <ListView  ItemsSource="{Binding Data}">
-          <ListView.ItemTemplate>
-            <DataTemplate>
-              <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5"/>
-              </StackPanel>
-            </DataTemplate>
-          </ListView.ItemTemplate>
-        </ListView>
-      </DataTemplate>
-    </mvux:FeedView>
+    <Grid Grid.Row="1" Grid.Column="0" Background="#3d3d3d" Margin="50,50,50,50" CornerRadius="10,10,10,10">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto"/>
+        <RowDefinition Height="1*"/>
+      </Grid.RowDefinitions>
+      <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
+        <TextBlock Text="Устройства: "/>
+        <TextBlock Text="{Binding AllItemsDevices, Mode=TwoWay}"/>
+        <TextBlock Text="/"/>
+        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}"/>
+      </StackPanel>
+      <mvux:FeedView Source="{Binding Devices}" Grid.Row="1">
+        <DataTemplate>
+          <ListView  ItemsSource="{Binding Data}">
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Vertical">
+                  <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
+                    <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                    <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                    <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                  </StackPanel>
+                  <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+        </DataTemplate>
+      </mvux:FeedView>
+    </Grid>
     <!-- Спосок найденных устройств -->
       
 
     <Border Grid.Column="1" Grid.Row="1" BorderThickness="2" Background="White" BorderBrush="White" Width="4"/>
-    <mvux:FeedView Source="{Binding DevicesSearch}" Grid.Row="1" Grid.Column="2" Background="#3d3d3d" Margin="50,50,50,50" CornerRadius="10,10,10,10">
+    <Grid Grid.Row="1" Grid.Column="2" Background="#3d3d3d" Margin="50,50,50,50" CornerRadius="10,10,10,10">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto"/>
+        <RowDefinition Height="1*"/>
+      </Grid.RowDefinitions>
+      <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
+        <TextBlock Text="Устройства: "/>
+        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}"/>
+        <TextBlock Text="/"/>
+        <TextBlock Text="{Binding CurrentItemsDevicesSearch, Mode=TwoWay}"/>
+      </StackPanel>
+      <mvux:FeedView Source="{Binding DevicesSearch}" Grid.Row="1" >
       <DataTemplate>
         <ListView  ItemsSource="{Binding Data}">
           <ListView.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5"/>
-              </StackPanel>
-            </DataTemplate>
+              <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
+                  <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                  <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                  <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                  </StackPanel>
+                  <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+               </StackPanel>
+              </DataTemplate>
           </ListView.ItemTemplate>
         </ListView>
       </DataTemplate>
     </mvux:FeedView>
+    </Grid>
     <Border Grid.ColumnSpan="3" Grid.Row="2" BorderThickness="2" Background="Transparent" BorderBrush="Transparent"/>
   </Grid>
 </Page>
