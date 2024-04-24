@@ -10,6 +10,6 @@ public interface IBTService
     Task CreateDevicesAsync();
     Task DeleteDevicesAsync();
     IAsyncEnumerable<ImmutableList<Device>> ScanDevicesAsync(CancellationToken ct);
-    Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm);
+    Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct);
 
 }

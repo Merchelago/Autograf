@@ -21,11 +21,11 @@ public class BTService : IBTService
     }
     public async Task CreateDevicesAsync()
     {
-        if (_devices.Count == 10) return;
+        if (_devices.Count == 50) return;
         await Task.Delay(2000);
         var random = new Random();
         string deviceType = RandomDeviceType(random);
-        string deviceName = RandomString(random, 6);
+        string deviceName = CreateName();
         int id = _devices.Count + 1;
             
         _devices.Add(new Device(id, deviceName, deviceType));
@@ -35,7 +35,7 @@ public class BTService : IBTService
     {
         while (true)
         {
-            await Task.Delay(3000);
+            await Task.Delay(13000);
             if (_devices.Count == 0)
                 return;
             var random = new Random();
@@ -58,16 +58,21 @@ public class BTService : IBTService
         }
     }
 
-    public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm)
+    public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
     {
-        await Task.Delay(1000); // имитация поиска
-        if (searchTerm == "") return [];
-        searchTerm = searchTerm.ToLower();
+        await Task.Delay(10, ct); // имитация поиска
+        if (searchTerm == "") return [.. _devices];
         var result = _devices.Where(d =>
-            d.DeviceName.Contains(searchTerm));
-        return result.ToImmutableList();
+            d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
+        return [.. result];
     }
-   
+
+    private string CreateName()
+    {
+        int id = _devices.Count + 1;
+        string formattedId = id.ToString("0000");
+        return formattedId;
+    }
     private string RandomString(Random random, int length)
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
