@@ -7,7 +7,7 @@
       xmlns:um="using:Uno.Material"
       xmlns:mvux="using:Uno.Extensions.Reactive.UI"
       NavigationCacheMode="Required"
-      Background="{ThemeResource BackgroundBrush}">
+      Background="#242323">
 
   <Page.Resources>
     <Style x:Key="TextBoxBottomBorder" TargetType="TextBox">
@@ -22,6 +22,8 @@
       <Setter Property="Template">
         <Setter.Value>
           <ControlTemplate TargetType="TextBox">
+            
+            
             <Grid>
               <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
@@ -44,6 +46,7 @@
                 <ScrollViewer x:Name="ContentElement" AutomationProperties.AccessibilityView="Raw" BorderThickness="0" IsTabStop="False" Padding="{TemplateBinding Padding}" />
               </Border>
             </Grid>
+           
           </ControlTemplate>
         </Setter.Value>
       </Setter>
@@ -76,7 +79,7 @@
           <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Image Grid.RowSpan="2" Grid.Column="0" Source="ms-appx:///BlueT/Assets/Icons/lope.png" Width="20"  Height="25" Margin="5,0,0,5"/>
-        <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3"/>
+        <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3" Foreground="White"/>
 
         <!--<border grid.row="1" grid.column="1" background="white" cornerradius="30,30,30,30" horizontalalignment="stretch" height="2"/>-->
       </Grid>
@@ -89,9 +92,9 @@
           <ListView.ItemTemplate>
             <DataTemplate>
               <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
-                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
-                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
                 <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5"/>
               </StackPanel>
             </DataTemplate>
@@ -109,9 +112,9 @@
           <ListView.ItemTemplate>
             <DataTemplate>
               <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
-                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
-                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0"/>
+                <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                <TextBlock Text="{Binding DeviceName}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                <TextBlock Text="{Binding DeviceType}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
                 <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5"/>
               </StackPanel>
             </DataTemplate>

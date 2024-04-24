@@ -9,8 +9,4 @@
     <None Include="**\*" Exclude="obj\**;bin\**;*.csproj" />
     <None Update="AppHead.xaml.cs" DependentUpon="AppHead.xaml" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Icons\" />
-  </ItemGroup>
 </Project>

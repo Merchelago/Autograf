@@ -6,19 +6,24 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Uno;
+using Uno.Extensions.Reactive;
 
 namespace BlueT.Services;
-public partial record Device(int Id, String DeviceName, string DeviceType);
+public partial record Device(int Id, string DeviceName, string DeviceType);
 public class BTService : IBTService
 {
-    private List<Device> _devices = new() { 
-        new(1, "DeviceName", "DeviceType"),
-    };
-    CancellationTokenSource source = new CancellationTokenSource();
-    
+    private int nameId = 0;
+    private string? _searchName = string.Empty;
     public BTService() {
         Task.Run(DeleteDevicesAsync, CancellationToken.None);
     }
+
+    private List<Device> _devices = new() {
+        new(1, "DeviceName", "DeviceType"),
+    };
+
+    public string SearchName { get => _searchName; set => _searchName = value; }
+
     public async Task CreateDevicesAsync()
     {
         if (_devices.Count == 50) return;
@@ -54,22 +59,36 @@ public class BTService : IBTService
         while (!ct.IsCancellationRequested)
         {
             yield return [.. _devices];
-            await Task.Run(CreateDevicesAsync);      
+            await Task.Run(CreateDevicesAsync, ct);      
+        }
+    }
+
+    public async IAsyncEnumerable<ImmutableList<Device>> SerchDevicesAsync([EnumeratorCancellation] CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            if (_searchName == "") yield return _devices.ToImmutableList();
+            await Task.Delay(10, ct); // имитация поиска
+            var result = _devices.Where(d =>
+                d.DeviceName.Contains(_searchName, StringComparison.CurrentCultureIgnoreCase));
+            yield return result.ToImmutableList();
         }
     }
 
     public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
     {
+
+        if (searchTerm == "")  return _devices.ToImmutableList();
         await Task.Delay(10, ct); // имитация поиска
-        if (searchTerm == "") return [.. _devices];
         var result = _devices.Where(d =>
             d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
-        return [.. result];
-    }
+        return result.ToImmutableList();
 
+    }
     private string CreateName()
     {
-        int id = _devices.Count + 1;
+        int id = nameId + 1;
+        nameId++;
         string formattedId = id.ToString("0000");
         return formattedId;
     }
@@ -85,7 +104,5 @@ public class BTService : IBTService
         string[] deviceTypes = { "Phone", "Tablet", "Laptop", "Desktop", "Smartwatch" };
         return deviceTypes[random.Next(deviceTypes.Length)];
     }
-
-    
 
 }

@@ -1,5 +1,5 @@
 using Microsoft.UI.Xaml;
-
+using Uno.Resizetizer;
 
 namespace BlueT;
 public sealed partial class AppHead : App
@@ -22,6 +22,6 @@ public sealed partial class AppHead : App
     {
         base.OnLaunched(args);
 
-
+        MainWindow.SetWindowIcon();
     }
 }

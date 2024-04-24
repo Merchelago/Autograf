@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 namespace BlueT.Services;
 public interface IBTService
 {
+    string SearchName { get; set; }
     Task CreateDevicesAsync();
     Task DeleteDevicesAsync();
     IAsyncEnumerable<ImmutableList<Device>> ScanDevicesAsync(CancellationToken ct);
     Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct);
 
+    IAsyncEnumerable<ImmutableList<Device>> SerchDevicesAsync(CancellationToken ct);
 }
