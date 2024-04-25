@@ -10,14 +10,16 @@ namespace BlueT.Business.Models;
 public partial record BTModel(IBTService BTService)
 {
     public IListFeed<Device> Devices =>ListFeed.AsyncEnumerable(BTService.ScanDevicesAsync);
-    
-    public IListFeed<Device> DevicesSearch => Search
+
+    /*public IListFeed<Device> DevicesSearch => Search
               .Where(searchTerm => searchTerm is { Length: >= 0 })
               .SelectAsync(async (searchTerm, ct) =>
               {
                   var result = await BTService.GetDevicesSearchAsync(searchTerm, ct);
                   return result;
-              }).AsListFeed();
+              }).AsListFeed();*/
+
+    public IListFeed<Device> DevicesSearch => ListFeed.Async(async ct => await BTService.GetDevicesSearchAsync(await Search.Value(ct),ct), BTService.RefreshList);
     public IState<string> Search => State<string>.Value(this, () => "");
 
     public IState<int> CurrentItemsDevices => State.AsyncEnumerable(this, BTService.GetCurrentItems);

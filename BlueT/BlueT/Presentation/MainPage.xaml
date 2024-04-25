@@ -36,7 +36,7 @@
                         <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}"/>
                       </ObjectAnimationUsingKeyFrames>
                       <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
-                        <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlPageTextBaseHighBrush}"/>
+                        <DiscreteObjectKeyFrame KeyTime="0" Value="White"/>
                       </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                   </VisualState>
@@ -91,10 +91,10 @@
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
       <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
-        <TextBlock Text="Устройства: "/>
-        <TextBlock Text="{Binding AllItemsDevices, Mode=TwoWay}"/>
-        <TextBlock Text="/"/>
-        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}"/>
+        <TextBlock Text="Устройства: " FontSize="15" Foreground="White"/>
+        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
+        <TextBlock Text="/" FontSize="15" Foreground="White"/>
+        <TextBlock Text="{Binding AllItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
       </StackPanel>
       <mvux:FeedView Source="{Binding Devices}" Grid.Row="1">
         <DataTemplate>
@@ -125,10 +125,10 @@
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
       <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
-        <TextBlock Text="Устройства: "/>
-        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}"/>
-        <TextBlock Text="/"/>
-        <TextBlock Text="{Binding CurrentItemsDevicesSearch, Mode=TwoWay}"/>
+        <TextBlock Text="Устройства: " FontSize="15" Foreground="White"/>
+        <TextBlock Text="{Binding CurrentItemsDevicesSearch , Mode=TwoWay}" FontSize="15" Foreground="White"/>
+        <TextBlock Text="/" FontSize="15" Foreground="White"/>
+        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
       </StackPanel>
       <mvux:FeedView Source="{Binding DevicesSearch}" Grid.Row="1" >
       <DataTemplate>

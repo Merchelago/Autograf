@@ -12,17 +12,15 @@ namespace BlueT.Services;
 public partial record Device(int Id, string DeviceName, string DeviceType);
 public class BTService : IBTService
 {
-    private int nameId = 0;
-    private string? _searchName = string.Empty;
-    private int _allDevices = 50;
+    private int nameId;
+    private readonly int _allDevices = 50;
     private int _serchedDevices = 0;
+    private readonly Signal _refreshList = new();
+    private List<Device> _devices = [];
     public BTService() {
         Task.Run(DeleteDevicesAsync, CancellationToken.None);
     }
-
-    private List<Device> _devices = new();
-
-    public string SearchName { get => _searchName; set => _searchName = value; }
+    public Signal RefreshList  => _refreshList;
 
     public async Task CreateDevicesAsync()
     {
@@ -34,7 +32,7 @@ public class BTService : IBTService
         int id = _devices.Count + 1;
             
         _devices.Add(new Device(id, deviceName, deviceType));
-
+        _refreshList.Raise();
     }
     public async Task DeleteDevicesAsync()
     {
@@ -52,27 +50,16 @@ public class BTService : IBTService
             {
                 _devices[i] = _devices[i] with { Id = i + 1 };
             }
+            _refreshList.Raise();
         }
     }
+
     public async IAsyncEnumerable<ImmutableList<Device>> ScanDevicesAsync([EnumeratorCancellation]CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
         {
-
             yield return [.. _devices];
-            await Task.Run(CreateDevicesAsync, ct);      
-        }
-    }
-
-    public async IAsyncEnumerable<ImmutableList<Device>> SerchDevicesAsync([EnumeratorCancellation] CancellationToken ct)
-    {
-        while (!ct.IsCancellationRequested)
-        {
-            if (_searchName == "") yield return _devices.ToImmutableList();
-            await Task.Delay(10, ct); // имитация поиска
-            var result = _devices.Where(d =>
-                d.DeviceName.Contains(_searchName, StringComparison.CurrentCultureIgnoreCase));
-            yield return result.ToImmutableList();
+            await Task.Run(CreateDevicesAsync);
         }
     }
 
@@ -131,5 +118,5 @@ public class BTService : IBTService
         return deviceTypes[random.Next(deviceTypes.Length)];
     }
 
-    
+  
 }
