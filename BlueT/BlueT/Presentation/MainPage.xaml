@@ -93,8 +93,6 @@
       <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
         <TextBlock Text="Устройства: " FontSize="15" Foreground="White"/>
         <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
-        <TextBlock Text="/" FontSize="15" Foreground="White"/>
-        <TextBlock Text="{Binding AllItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
       </StackPanel>
       <mvux:FeedView Source="{Binding Devices}" Grid.Row="1">
         <DataTemplate>

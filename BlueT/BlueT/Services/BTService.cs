@@ -18,21 +18,26 @@ public class BTService : IBTService
     private readonly Signal _refreshList = new();
     private List<Device> _devices = [];
     public BTService() {
+        Task.Run(CreateDevicesAsync, CancellationToken.None);
         Task.Run(DeleteDevicesAsync, CancellationToken.None);
     }
     public Signal RefreshList  => _refreshList;
 
     public async Task CreateDevicesAsync()
     {
-        if (_devices.Count == _allDevices) return;
-        await Task.Delay(2000);
-        var random = new Random();
-        string deviceType = RandomDeviceType(random);
-        string deviceName = CreateName();
-        int id = _devices.Count + 1;
-            
-        _devices.Add(new Device(id, deviceName, deviceType));
-        _refreshList.Raise();
+        while (true)
+        {
+            if (_devices.Count == _allDevices) continue;
+            await Task.Delay(2000);
+            var random = new Random();
+            string deviceType = RandomDeviceType(random);
+            string deviceName = CreateName();
+            int id = _devices.Count + 1;
+
+            _devices.Add(new Device(id, deviceName, deviceType));
+            _refreshList.Raise();
+        }
+        
     }
     public async Task DeleteDevicesAsync()
     {
@@ -58,16 +63,26 @@ public class BTService : IBTService
     {
         while (!ct.IsCancellationRequested)
         {
+            await Task.Delay(100, ct);
             yield return [.. _devices];
-            await Task.Run(CreateDevicesAsync);
+            _refreshList.Raise();
         }
     }
-
+    public async Task<ImmutableList<Device>> GetDevicesAsync(CancellationToken ct)
+    {
+        await Task.Delay(10, ct);
+        return [.._devices] ;
+    }
     public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
     {
         _serchedDevices = 0;
-        if (searchTerm == "")  return _devices.ToImmutableList();
-        await Task.Delay(10, ct); // имитация поиска
+        if (searchTerm == "") 
+        { 
+            _serchedDevices = _devices.Count;
+            return [.. _devices]; 
+        }
+
+        await Task.Delay(100, ct); // имитация поиска
         var result = _devices.Where(d =>
             d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
         _serchedDevices = result.ToList().Count;
@@ -104,12 +119,6 @@ public class BTService : IBTService
         nameId++;
         string formattedId = id.ToString("0000");
         return formattedId;
-    }
-    private string RandomString(Random random, int length)
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        return new string(Enumerable.Repeat(chars, length)
-          .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 
     private string RandomDeviceType(Random random)
