@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Uno;
 using Uno.Extensions.Reactive;
+using Windows.UI;
 
 namespace BlueT.Services;
 public partial record Device(int Id, string DeviceName, string DeviceType);
@@ -16,12 +18,25 @@ public class BTService : IBTService
     private readonly int _allDevices = 50;
     private int _serchedDevices = 0;
     private readonly Signal _refreshList = new();
+    private readonly Signal _refreshDeletedCreatedDevice = new();
+    private readonly Signal _refreshColorDevice = new();
+    private readonly Signal _refreshHistory = new();
     private List<Device> _devices = [];
+    private List<string> _history = [];
+    private Device _device = new(0,"","");
+    private System.Drawing.Color _color;
+
     public BTService() {
         Task.Run(CreateDevicesAsync, CancellationToken.None);
         Task.Run(DeleteDevicesAsync, CancellationToken.None);
     }
     public Signal RefreshList  => _refreshList;
+
+    public Signal RefreshDeletedCreatedDevice => _refreshDeletedCreatedDevice;
+
+    public Signal RefreshColorDevice => _refreshColorDevice;
+
+    public Signal RefreshHistory => _refreshHistory;
 
     public async Task CreateDevicesAsync()
     {
@@ -33,7 +48,12 @@ public class BTService : IBTService
             string deviceType = RandomDeviceType(random);
             string deviceName = CreateName();
             int id = _devices.Count + 1;
-
+            _device = new(id, deviceName, deviceType);
+            _history.Add($"Устройство создано: {id} {deviceName} {deviceType}");
+            _refreshHistory.Raise();
+            _color = System.Drawing.Color.Green;
+            _refreshColorDevice.Raise();
+            _refreshDeletedCreatedDevice.Raise();
             _devices.Add(new Device(id, deviceName, deviceType));
             _refreshList.Raise();
         }
@@ -48,6 +68,12 @@ public class BTService : IBTService
                 return;
             var random = new Random();
             int indexToRemove = random.Next(_devices.Count);
+            _device = _devices[indexToRemove];
+            _history.Add($"Устройство Удалено: {_device.Id} {_device.DeviceName} {_device.DeviceType}");
+            _refreshHistory.Raise();
+            _color = System.Drawing.Color.Red;
+            _refreshColorDevice.Raise();
+            _refreshDeletedCreatedDevice.Raise();
             _devices.RemoveAt(indexToRemove);
 
             // Пересчитываем ID
@@ -58,7 +84,21 @@ public class BTService : IBTService
             _refreshList.Raise();
         }
     }
-
+    public async Task<Device> GetCreatedDeletedDeviceAsync(CancellationToken ct)
+    {
+        await Task.Delay(10, ct);
+        return _device;
+    }
+    public async Task<string> GetCreatedDeletedColorDeviceAsync(CancellationToken ct)
+    {
+        await Task.Delay(10, ct);
+        return _color.Name;
+    }
+    public async Task<ImmutableList<string>> GetHistoryAsync(CancellationToken ct)
+    {
+        await Task.Delay(10, ct);
+        return [.. _history];
+    }
     public async IAsyncEnumerable<ImmutableList<Device>> ScanDevicesAsync([EnumeratorCancellation]CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -75,19 +115,22 @@ public class BTService : IBTService
     }
     public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
     {
-        _serchedDevices = 0;
-        if (searchTerm == "") 
-        { 
-            _serchedDevices = _devices.Count;
-            return [.. _devices]; 
+        string temp = "";
+        if (searchTerm != temp) { 
+            await Task.Delay(100, ct); // имитация поиска
+            var result = _devices.Where(d =>
+                d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
+            _serchedDevices = result.ToList().Count;
+            _history.Add($"Был использован поиск: {searchTerm}, найдено {_serchedDevices} устройств");
+            return result.ToImmutableList();
         }
-
-        await Task.Delay(100, ct); // имитация поиска
-        var result = _devices.Where(d =>
-            d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
-        _serchedDevices = result.ToList().Count;
-        return result.ToImmutableList();
-
+        else
+        {
+            _refreshHistory.Raise();
+            temp = searchTerm;
+            _serchedDevices = _devices.Count;
+        }
+        return [.. _devices];
     }
 
     public async ValueTask<int> GetAllItems(CancellationToken ct)
@@ -127,5 +170,5 @@ public class BTService : IBTService
         return deviceTypes[random.Next(deviceTypes.Length)];
     }
 
-  
+    
 }

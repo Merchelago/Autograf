@@ -8,7 +8,13 @@ namespace BlueT.Services;
 public interface IBTService
 {
     Signal RefreshList { get; }
+    Signal RefreshDeletedCreatedDevice { get; }
+    Signal RefreshColorDevice { get; }
+    Signal RefreshHistory {  get; }
     Task CreateDevicesAsync();
+    Task<Device> GetCreatedDeletedDeviceAsync(CancellationToken ct);
+    Task<string> GetCreatedDeletedColorDeviceAsync(CancellationToken ct);
+    Task<ImmutableList<string>> GetHistoryAsync(CancellationToken ct);
     Task DeleteDevicesAsync();
     IAsyncEnumerable<ImmutableList<Device>> ScanDevicesAsync(CancellationToken ct);
     Task<ImmutableList<Device>> GetDevicesAsync(CancellationToken ct);

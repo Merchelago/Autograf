@@ -63,7 +63,7 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="auto" />
       <RowDefinition Height="1*"/>
-      <RowDefinition Height="100"/>
+      <RowDefinition Height="300"/>
     </Grid.RowDefinitions>
 
     <!-- Поиск -->
@@ -90,9 +90,20 @@
         <RowDefinition Height="auto"/>
         <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
-      <StackPanel Grid.Row="0" Orientation="Horizontal" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
-        <TextBlock Text="Устройства: " FontSize="15" Foreground="White"/>
-        <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
+      <StackPanel Grid.Row="0" Orientation="Vertical" Background="#525252" CornerRadius="10,10,10,10" Margin="10,10,10,10" Padding="10,10,10,10" HorizontalAlignment="Center">
+        <mvux:FeedView Source="{Binding CreatedDeletedDevice}" Grid.Row="1">
+          <DataTemplate>
+            <StackPanel Orientation="Horizontal">
+              <TextBlock DataContext="{Binding Data}" Text="{Binding Id}" FontSize="15" Foreground="{Binding CreatedDeletedColor}" Margin="5,0,0,0"/>
+              <TextBlock DataContext="{Binding Data}" Text="{Binding DeviceName}" FontSize="15" Foreground="{Binding CreatedDeletedColor}" Margin="5,0,0,0"/>
+              <TextBlock DataContext="{Binding Data}" Text="{Binding DeviceType}" FontSize="15" Foreground="{Binding CreatedDeletedColor}" Margin="5,0,0,0"/>
+            </StackPanel>
+          </DataTemplate>
+        </mvux:FeedView>
+        <StackPanel Orientation="Horizontal">
+          <TextBlock Text="Устройства: " FontSize="15" Foreground="White"/>
+          <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="15" Foreground="White"/>
+        </StackPanel>
       </StackPanel>
       <mvux:FeedView Source="{Binding Devices}" Grid.Row="1">
         <DataTemplate>
@@ -147,6 +158,29 @@
       </DataTemplate>
     </mvux:FeedView>
     </Grid>
-    <Border Grid.ColumnSpan="3" Grid.Row="2" BorderThickness="2" Background="Transparent" BorderBrush="Transparent"/>
+    <!--<Border Grid.ColumnSpan="3" Grid.Row="2" BorderThickness="2" Background="Transparent" BorderBrush="Transparent"/> -->
+    <Grid Grid.ColumnSpan="3" Grid.Row="2">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto"/>
+        <RowDefinition Height="1*"/>
+      </Grid.RowDefinitions>
+      <TextBlock Grid.Row="0" Text="История:" Foreground="White" Margin="20,20,20,20"/>
+      <mvux:FeedView Grid.Row="1" Source="{Binding GetHistory}" Margin="20,0,0,20">
+        <DataTemplate>
+          <ListView  ItemsSource="{Binding Data}">
+            <ListView.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Orientation="Vertical">
+                  <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
+                    <TextBlock Text="{Binding}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
+                  </StackPanel>
+                  <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListView.ItemTemplate>
+          </ListView>
+        </DataTemplate>
+      </mvux:FeedView>
+    </Grid>
   </Grid>
 </Page>
