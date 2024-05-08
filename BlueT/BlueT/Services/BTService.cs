@@ -1,34 +1,24 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Drawing;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Uno;
-using Uno.Extensions.Reactive;
-using Windows.UI;
 
 namespace BlueT.Services;
 public partial record Device(int Id, string DeviceName, string DeviceType);
-public class BTService : IBTService
+public class BtService : IBtService
 {
-    private int nameId;
-    private readonly int _allDevices = 50;
-    private int _serchedDevices = 0;
-    private readonly Signal _refreshList = new();
+    private int nameId; // Имя устройства
+    private readonly int _allDevices = 50; // кол-во устройств
+    private int _serchedDevices = 0; // кол-во найденных устройств
+    private readonly Signal _refreshList = new(); // сигнал на обновление списка устройств
     private readonly Signal _refreshDeletedCreatedDevice = new();
     private readonly Signal _refreshColorDevice = new();
-    private readonly Signal _refreshHistory = new();
-    private List<Device> _devices = [];
-    private List<string> _history = [];
-    private Device _device = new(0,"","");
+    private readonly Signal _refreshHistory = new(); // сигнал на обновление списка найденных устройств
+    private List<Device> _devices = []; // список устройств
+    private List<string> _history = []; // список найденных устройств
+    private Device _device = new(0,"",""); // обьект устройсва для вывода созданного или удаленного устройства
     private System.Drawing.Color _color;
 
-    public BTService() {
-        Task.Run(CreateDevicesAsync, CancellationToken.None);
-        Task.Run(DeleteDevicesAsync, CancellationToken.None);
+    public BtService() {
+        Task.Run(CreateDevicesAsync, CancellationToken.None); // задача на добавление устройств в список
+        Task.Run(DeleteDevicesAsync, CancellationToken.None); // задача на удаление устройств из списка
     }
     public Signal RefreshList  => _refreshList;
 
@@ -38,7 +28,7 @@ public class BTService : IBTService
 
     public Signal RefreshHistory => _refreshHistory;
 
-    public async Task CreateDevicesAsync()
+    public async Task CreateDevicesAsync() // Метод для создания устройств 
     {
         while (true)
         {
@@ -59,7 +49,7 @@ public class BTService : IBTService
         }
         
     }
-    public async Task DeleteDevicesAsync()
+    public async Task DeleteDevicesAsync() // Метод для удаления устройств 
     {
         while (true)
         {
@@ -84,17 +74,17 @@ public class BTService : IBTService
             _refreshList.Raise();
         }
     }
-    public async Task<Device> GetCreatedDeletedDeviceAsync(CancellationToken ct)
+    public async Task<Device> GetCreatedDeletedDeviceAsync(CancellationToken ct) // Метод для возращения только что удаленного или созданного устройства
     {
         await Task.Delay(10, ct);
         return _device;
     }
-    public async Task<string> GetCreatedDeletedColorDeviceAsync(CancellationToken ct)
+    public async Task<string> GetCreatedDeletedColorDeviceAsync(CancellationToken ct)  
     {
         await Task.Delay(10, ct);
         return _color.Name;
     }
-    public async Task<ImmutableList<string>> GetHistoryAsync(CancellationToken ct)
+    public async Task<ImmutableList<string>> GetHistoryAsync(CancellationToken ct) 
     {
         await Task.Delay(10, ct);
         return [.. _history];

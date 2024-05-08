@@ -57,7 +57,7 @@ public class App : Application
                 {
                     // TODO: Register your services
                     //services.AddSingleton<IMyService, MyService>();
-                    services.AddSingleton<IBTService, BTService>();
+                    services.AddSingleton<IBtService, BtService>();
                 })
                 .UseNavigation(ReactiveViewModelMappings.ViewModelMappings, RegisterRoutes)
             );
@@ -74,14 +74,14 @@ public class App : Application
     {
         views.Register(
             new ViewMap(ViewModel: typeof(ShellModel)),
-            new ViewMap<MainPage, BTModel>()
+            new ViewMap<MainPage, BtModel>()
         );
 
         routes.Register(
             new RouteMap("", View: views.FindByViewModel<ShellModel>(),
                 Nested: new RouteMap[]
                 {
-                    new RouteMap("Main", View: views.FindByViewModel<BTModel>()),
+                    new RouteMap("Main", View: views.FindByViewModel<BtModel>()),
                 }
             )
         );
