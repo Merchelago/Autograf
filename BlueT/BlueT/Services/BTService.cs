@@ -39,7 +39,7 @@ public class BtService : IBtService
             string deviceName = CreateName();
             int id = _devices.Count + 1;
             _device = new(id, deviceName, deviceType);
-            _history.Add($"Устройство создано: {id} {deviceName} {deviceType}");
+            _history.Insert(0, $"{DateTime.Now.ToLongTimeString()} Создано: {id} {deviceName} {deviceType}");
             _refreshHistory.Raise();
             _color = System.Drawing.Color.Green;
             _refreshColorDevice.Raise();
@@ -59,7 +59,7 @@ public class BtService : IBtService
             var random = new Random();
             int indexToRemove = random.Next(_devices.Count);
             _device = _devices[indexToRemove];
-            _history.Add($"Устройство Удалено: {_device.Id} {_device.DeviceName} {_device.DeviceType}");
+            _history.Insert(0,$"{DateTime.Now.ToLongTimeString()} Удалено: {_device.Id} {_device.DeviceName} {_device.DeviceType}");
             _refreshHistory.Raise();
             _color = System.Drawing.Color.Red;
             _refreshColorDevice.Raise();

@@ -13,6 +13,6 @@ public class ShellModel
 
     public async Task Start()
     {
-        await _navigator.NavigateViewModelAsync<BTModel>(this);
+        await _navigator.NavigateViewModelAsync<BtModel>(this);
     }
 }
