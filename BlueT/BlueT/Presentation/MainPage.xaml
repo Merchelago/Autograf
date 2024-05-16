@@ -105,28 +105,51 @@
           <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="20" Foreground="White" Margin="5,0,0,0"/>
           </StackPanel>
         </StackPanel>
-      <StackPanel Grid.Row="1">
-        <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-          <TextBlock Text="Id" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-          <TextBlock Text="Имя устройства" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#5a8c89"/>
-          <TextBlock Text="Тип устройства" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#8c785a"/>
-        </StackPanel>
-        <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
-      </StackPanel>
+      <Grid Grid.Row="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="auto"/>
+          <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="50"/>
+          <ColumnDefinition Width="auto"/>
+          <ColumnDefinition Width="1*"/>
+          <ColumnDefinition Width="auto"/>
+          <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Id" FontSize="20" VerticalAlignment="Center" Margin="25,0,0,0" Foreground="White"/>
+        <Border Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Имя устройства" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#5a8c89"/>
+        <Border Grid.RowSpan="2" Grid.Column="3" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+        <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Text="Тип устройства" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#8c785a"/>
+        <Border Grid.Row="1" Grid.ColumnSpan="5" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+      </Grid>
       <mvux:FeedView Source="{Binding Devices}" Grid.Row="2">
           <DataTemplate>
             <ListView  ItemsSource="{Binding Data}">
               <ListView.ItemTemplate>
                 <DataTemplate>
-                  <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-                      <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                    <TextBlock Text="{Binding DeviceName}" FontSize="15" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#5a8c89"/>
-                    <TextBlock Text="{Binding DeviceType}" FontSize="15" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#8c785a"/>
-                    </StackPanel>
-                    <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
-                  </StackPanel>
-                </DataTemplate>
+                  <Grid>
+                    <Grid.RowDefinitions>
+                      <RowDefinition Height="auto"/>
+                      <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                      <ColumnDefinition Width="50"/>
+                      <ColumnDefinition Width="auto"/>
+                      <ColumnDefinition Width="1*"/>
+                      <ColumnDefinition Width="auto"/>
+                      <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="25,0,0,0" Foreground="White"/>
+                  <Border Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0"/>
+                  <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="{Binding DeviceName}" FontSize="15" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#5a8c89"/>
+                  <Border Grid.RowSpan="2" Grid.Column="3" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0"/>
+                  <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Text="{Binding DeviceType}" FontSize="15" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#8c785a"/>
+                  <Border Grid.Row="1" Grid.ColumnSpan="5" BorderThickness="2" VerticalAlignment="Bottom" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+                </Grid>
+              </DataTemplate>
               </ListView.ItemTemplate>
             </ListView>
           </DataTemplate>
@@ -148,28 +171,51 @@
           <TextBlock Text="/" FontSize="20" Foreground="White" Margin="5,0,0,0"/>
           <TextBlock Text="{Binding CurrentItemsDevices, Mode=TwoWay}" FontSize="20" Foreground="White" Margin="5,0,0,0"/>
       </StackPanel>
-      <StackPanel Grid.Row="1">
-        <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-          <TextBlock Text="Id" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-          <TextBlock Text="Имя устройства" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#5a8c89"/>
-          <TextBlock Text="Тип устройства" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#8c785a"/>
-        </StackPanel>
-        <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
-      </StackPanel>
-        <mvux:FeedView Source="{Binding DevicesSearch}" Grid.Row="2" >
+      <Grid Grid.Row="1">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="auto"/>
+          <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="50"/>
+          <ColumnDefinition Width="auto"/>
+          <ColumnDefinition Width="1*"/>
+          <ColumnDefinition Width="auto"/>
+          <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="Id" FontSize="20" VerticalAlignment="Center" Margin="25,0,0,0" Foreground="White"/>
+        <Border Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="Имя устройства" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#5a8c89"/>
+        <Border Grid.RowSpan="2" Grid.Column="3" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+        <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Text="Тип устройства" FontSize="20" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#8c785a"/>
+        <Border Grid.Row="1" Grid.ColumnSpan="5" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+      </Grid>
+      <mvux:FeedView Source="{Binding DevicesSearch}" Grid.Row="2" >
           <DataTemplate>
             <ListView  ItemsSource="{Binding Data}">
               <ListView.ItemTemplate>
                 <DataTemplate>
-                  <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal" Spacing="5" Margin="0,5,0,0">
-                      <TextBlock Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="White"/>
-                      <TextBlock Text="{Binding DeviceName}" FontSize="15" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#5a8c89"/>
-                      <TextBlock Text="{Binding DeviceType}" FontSize="15" VerticalAlignment="Center" Margin="20,0,0,0" Foreground="#8c785a"/>
-                    </StackPanel>
-                    <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
-                  </StackPanel>
-                </DataTemplate>
+                <Grid>
+                  <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                  </Grid.RowDefinitions>
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="1*"/>
+                  </Grid.ColumnDefinitions>
+                        
+                  <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Id}" FontSize="20" VerticalAlignment="Center" Margin="25,0,0,0" Foreground="White"/>
+                  <Border Grid.RowSpan="2" Grid.Column="1" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0"/>
+                  <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Text="{Binding DeviceName}" FontSize="15" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#5a8c89"/>
+                  <Border Grid.RowSpan="2" Grid.Column="3" BorderThickness="2" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0"/>
+                  <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" Text="{Binding DeviceType}" FontSize="15" VerticalAlignment="Center" Margin="0,0,0,0" Foreground="#8c785a"/>
+                  <Border Grid.Row="1" Grid.ColumnSpan="5" BorderThickness="2" VerticalAlignment="Bottom" Background="White" BorderBrush="White" HorizontalAlignment="Stretch" Margin="20,5,20,5" Opacity="0.2"/>
+                </Grid>
+              </DataTemplate>
               </ListView.ItemTemplate>
             </ListView>
           </DataTemplate>
@@ -178,7 +224,7 @@
       <!--#endregion-->
       <!-- История -->
       <!--#region  История-->
-      <Grid Grid.ColumnSpan="3" Grid.Row="3">
+    <Grid Grid.ColumnSpan="3" Grid.Row="3" Background="#3d3d3d" Margin="0,20,0,0" CornerRadius="10,10,0,0">
         <Grid.RowDefinitions>
           <RowDefinition Height="auto"/>
           <RowDefinition Height="1*"/>
