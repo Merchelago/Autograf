@@ -6,7 +6,7 @@ public sealed partial class MainPage
 {
     public MainPage()
     {
-        this.InitializeComponent();
-        this.DataContext = new BindableBtModel(new BtService());
+        InitializeComponent();
+        DataContext = new BindableBtModel(new BtService());
     }
 }
