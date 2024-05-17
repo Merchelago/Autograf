@@ -77,8 +77,8 @@
             <RowDefinition Height="1*"/>
           </Grid.RowDefinitions>
           <Image Grid.RowSpan="2" Grid.Column="0" Source="ms-appx:///BlueT/Assets/Icons/lope.png" Width="20"  Height="25" Margin="5,0,0,5"/>
-          <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3" Foreground="White"/>
-        </Grid>
+        <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3" Foreground="White"/>
+      </Grid>
       </Border>
       <!--#endregion-->
       <!-- Список устройств -->
