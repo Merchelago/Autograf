@@ -10,7 +10,6 @@ public class BtService : IBtService
     private int _serchedDevices = 0; // кол-во найденных устройств
     private readonly Signal _refreshList = new(); // сигнал на обновление списка устройств
     private readonly Signal _refreshDeletedCreatedDevice = new();
-    private readonly Signal _refreshColorDevice = new();
     private readonly Signal _refreshHistory = new(); // сигнал на обновление списка найденных устройств
     private List<Device> _devices = []; // список устройств
     private List<string> _history = []; // список истории
@@ -19,19 +18,16 @@ public class BtService : IBtService
     private string _tempTerm = "";
     private string _searchTerm = "";
     private int _devicesCount;
+
     public BtService() {
         Task.Run(CreateDevicesAsync, CancellationToken.None); // задача на добавление устройств в список
         Task.Run(DeleteDevicesAsync, CancellationToken.None); // задача на удаление устройств из списка
     }
+
     public Signal RefreshList  => _refreshList;
-
     public Signal RefreshDeletedCreatedDevice => _refreshDeletedCreatedDevice;
-
-    public Signal RefreshColorDevice => _refreshColorDevice;
-
     public Signal RefreshHistory => _refreshHistory;
-
-   public string SearchTerm { get => _searchTerm; set => _searchTerm = value; }
+    public string SearchTerm { get => _searchTerm; set => _searchTerm = value; }
 
     public async Task CreateDevicesAsync() // Метод для создания устройств 
     {
@@ -40,16 +36,16 @@ public class BtService : IBtService
             if (_devices.Count == _allDevices) continue;
             await Task.Delay(2000);
             var random = new Random();
-            string deviceType = BtService.RandomDeviceType(random);
+            string deviceType = RandomDeviceType(random);
             string deviceName = CreateName();
             int id = _devices.Count + 1;
             _devicesCount = _devices.Count;
             _device = new(id, deviceName, deviceType);
             _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Создано: {id} {deviceName} {deviceType}");
-            _refreshHistory.Raise();
-            _refreshDeletedCreatedDevice.Raise();
             _devices.Add(new Device(id, deviceName, deviceType));
             _refreshList.Raise();
+            _refreshHistory.Raise();
+            _refreshDeletedCreatedDevice.Raise();
         }
         
     }
@@ -65,16 +61,15 @@ public class BtService : IBtService
             int indexToRemove = random.Next(_devices.Count);
             _device = _devices[indexToRemove];
             _history.Insert(0,$"{DateTime.Now:H:mm:ss} || Удалено: {_device.Id} {_device.DeviceName} {_device.DeviceType}");
-            _refreshHistory.Raise();
-            _refreshDeletedCreatedDevice.Raise();
             _devices.RemoveAt(indexToRemove);
-
             // Пересчитываем ID
             for (int i = indexToRemove; i < _devices.Count; i++)
             {
                 _devices[i] = _devices[i] with { Id = i + 1 };
             }
             _refreshList.Raise();
+            _refreshHistory.Raise();
+            _refreshDeletedCreatedDevice.Raise();
         }
     }
 
@@ -90,16 +85,9 @@ public class BtService : IBtService
         return await Task.FromResult(_history.ToImmutableList());
     }
 
-    public async IAsyncEnumerable<ImmutableList<Device>> ScanDevicesAsync([EnumeratorCancellation] CancellationToken ct)
+    public async Task<ImmutableList<Device>> ScanDevicesAsync(CancellationToken ct)
     {
-
-        while (!ct.IsCancellationRequested)
-        {
-            await Task.Delay(1000, ct);
-            yield return [.. _devices];
-            _refreshList.Raise();
-        }
-
+        return await Task.FromResult( _devices.ToImmutableList());
     }
 
     public async Task<ImmutableList<Device>> GetDevicesAsync(CancellationToken ct)
@@ -127,11 +115,9 @@ public class BtService : IBtService
             _serchedDevices = result.Count();
             // Добавляем историю поиска
             _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Поиск: введено-> \"{searchTerm}\", найдено {_serchedDevices} устройств");
-            // Вызываем событие обновления истории
-            _refreshHistory.Raise();
             _tempTerm = searchTerm;
             _searchResult = [.. result];
-
+            _refreshHistory.Raise();
             return await Task.FromResult(result.ToImmutableList());
         }
         return await Task.FromResult(_searchResult.ToImmutableList());
@@ -168,6 +154,4 @@ public class BtService : IBtService
         string[] deviceTypes = ["Phone", "Tablet", "Laptop", "Desktop", "Smartwatch"];
         return deviceTypes[random.Next(deviceTypes.Length)];
     }
-
-    
 }
