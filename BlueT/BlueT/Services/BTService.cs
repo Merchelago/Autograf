@@ -20,21 +20,39 @@ public class BtService : IBtService
     private int _devicesCount;
 
     public BtService() {
-        Task.Run(CreateDevicesAsync, CancellationToken.None); // задача на добавление устройств в список
-        Task.Run(DeleteDevicesAsync, CancellationToken.None); // задача на удаление устройств из списка
+        token = source.Token;
+        Task.Run(()=> CreateDevicesAsync(token), token);
+        Task.Run(()=> DeleteDevicesAsync(token), token);
     }
-
+    public CancellationTokenSource source = new CancellationTokenSource();
+    public CancellationToken token;
     public Signal RefreshList  => _refreshList;
     public Signal RefreshDeletedCreatedDevice => _refreshDeletedCreatedDevice;
     public Signal RefreshHistory => _refreshHistory;
     public string SearchTerm { get => _searchTerm; set => _searchTerm = value; }
-
-    public async Task CreateDevicesAsync() // Метод для создания устройств 
+    public async Task Refresh(string searchTerm, CancellationToken ct)
     {
-        while (true)
+        await Task.Run(() => _refreshList.Raise(), ct);
+        await Task.Run(() =>
+        {
+            var result = _devices.Where(d =>
+                    d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                    d.DeviceType.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
+            // Обновляем количество найденных устройств
+            _serchedDevices = result.Count();
+            // Добавляем историю поиска
+            _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Поиск: введено-> \"{searchTerm}\", найдено {_serchedDevices} устройств");
+            _refreshHistory.Raise();
+        }, ct);
+    }
+    
+       
+    public async Task CreateDevicesAsync(CancellationToken ct) // Метод для создания устройств 
+    {
+        while (!ct.IsCancellationRequested)
         {
             if (_devices.Count == _allDevices) continue;
-            await Task.Delay(2000);
+            await Task.Delay(2000, ct);
             var random = new Random();
             string deviceType = RandomDeviceType(random);
             string deviceName = CreateName();
@@ -50,11 +68,11 @@ public class BtService : IBtService
         
     }
 
-    public async Task DeleteDevicesAsync() // Метод для удаления устройств 
+    public async Task DeleteDevicesAsync(CancellationToken ct) // Метод для удаления устройств 
     {
-        while (true)
+        while (!ct.IsCancellationRequested)
         {
-            await Task.Delay(13000);
+            await Task.Delay(13000, ct);
             if (_devices.Count == 0)
                 return;
             var random = new Random();
@@ -94,15 +112,49 @@ public class BtService : IBtService
     {
         return await Task.FromResult(_devices.ToImmutableList());
     }
+    public async Task<ImmutableList<Device>> GetDevicesSearchAsync( CancellationToken ct)
+    {
+        return await Task.FromResult(_devices.ToImmutableList());
+    }
+    /*public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
+    {
+        while (!ct.IsCancellationRequested)
+        {
+            // Если поисковый запрос пустой, возвращаем основной список устройств
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                _serchedDevices = _devices.Count;
+                return await Task.FromResult(_devices.ToImmutableList());
+            }
 
+            if (searchTerm != _tempTerm)
+            {
+                // Выполняем поиск устройств
+                var result = _devices.Where(d =>
+                    d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
+                    d.DeviceType.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
+                // Обновляем количество найденных устройств
+                _serchedDevices = result.Count();
+                // Добавляем историю поиска
+                _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Поиск: введено-> \"{searchTerm}\", найдено {_serchedDevices} устройств");
+                _tempTerm = searchTerm;
+                _searchResult = [.. result];
+                _refreshHistory.Raise();
+                return await Task.FromResult(result.ToImmutableList());
+            }
+            return await Task.FromResult(_searchResult.ToImmutableList());
+        }
+        return await Task.FromResult(_searchResult.ToImmutableList());
+    }*/
+    /*
     public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
     {
-        
+        while(!ct.IsCancellationRequested)
         // Если поисковый запрос пустой, возвращаем основной список устройств
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
             _serchedDevices = _devices.Count;
-             return await Task.FromResult(_devices.ToImmutableList());
+           return await Task.FromResult(_devices.ToImmutableList());
         }
 
         if (searchTerm != _tempTerm)
@@ -121,8 +173,7 @@ public class BtService : IBtService
             return await Task.FromResult(result.ToImmutableList());
         }
         return await Task.FromResult(_searchResult.ToImmutableList());
-    }
-
+    }*/
     public async ValueTask<int> GetAllItems(CancellationToken ct)
     {
         

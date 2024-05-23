@@ -77,13 +77,13 @@
             <RowDefinition Height="1*"/>
           </Grid.RowDefinitions>
           <Image Grid.RowSpan="2" Grid.Column="0" Source="ms-appx:///BlueT/Assets/Icons/lope.png" Width="20"  Height="25" Margin="5,0,0,5"/>
-        <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3" Foreground="White" TextChanging="TextBox_TextChanging"/>
+        <TextBox Text="{Binding Search, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.RowSpan="2" Grid.Column="1" PlaceholderText="Найти:" Style="{StaticResource TextBoxBottomBorder}" Margin="5,0,0,5" Padding="0,0,0,3" Foreground="White" />
       </Grid>
       </Border>
       <!--#endregion-->
       <!-- Список устройств -->
       <!--#region  Список устройств-->
-    <mvux:FeedView Source="{Binding CreatedDeletedDevice}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+    <mvux:FeedView Source="{Binding CreatedDeletedDevice}" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" >
       <DataTemplate>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Background="#334a48" Padding="50,20,50,20">
           <TextBlock DataContext="{Binding Data}" Text="{Binding Id}" FontSize="25" Foreground="White" Margin="5,0,0,0" />
