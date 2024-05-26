@@ -5,6 +5,7 @@ namespace BlueT.Services;
 public partial record Device(int Id, string DeviceName, string DeviceType);
 public class BtService : IBtService
 {
+    
     private int nameId; // Имя устройства
     private readonly int _allDevices = 50; // кол-во устройств
     private int _serchedDevices = 0; // кол-во найденных устройств
@@ -12,24 +13,20 @@ public class BtService : IBtService
     private readonly Signal _refreshDeletedCreatedDevice = new();
     private readonly Signal _refreshHistory = new(); // сигнал на обновление списка найденных устройств
     private List<Device> _devices = []; // список устройств
-    private List<string> _history = []; // список истории
-    private ImmutableList<Device> _searchResult = []; // список найденных устройств
+    private List<string> _history = []; // список истории 
     private Device _device = new(0,"",""); // обьект устройсва для вывода созданного или удаленного устройства
-    private string _tempTerm = "";
-    private string _searchTerm = "";
     private int _devicesCount;
 
     public BtService() {
-        token = source.Token;
-        Task.Run(()=> CreateDevicesAsync(token), token);
-        Task.Run(()=> DeleteDevicesAsync(token), token);
+        
+        Task.Run(CreateDevicesAsync);
+        Task.Run(DeleteDevicesAsync);
     }
-    public CancellationTokenSource source = new CancellationTokenSource();
-    public CancellationToken token;
+
     public Signal RefreshList  => _refreshList;
     public Signal RefreshDeletedCreatedDevice => _refreshDeletedCreatedDevice;
     public Signal RefreshHistory => _refreshHistory;
-    public string SearchTerm { get => _searchTerm; set => _searchTerm = value; }
+
     public async Task Refresh(string searchTerm, CancellationToken ct)
     {
         await Task.Run(() => _refreshList.Raise(), ct);
@@ -43,16 +40,17 @@ public class BtService : IBtService
             // Добавляем историю поиска
             _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Поиск: введено-> \"{searchTerm}\", найдено {_serchedDevices} устройств");
             _refreshHistory.Raise();
+            
         }, ct);
     }
     
        
-    public async Task CreateDevicesAsync(CancellationToken ct) // Метод для создания устройств 
+    public async Task CreateDevicesAsync() // Метод для создания устройств 
     {
-        while (!ct.IsCancellationRequested)
+        while (true)
         {
             if (_devices.Count == _allDevices) continue;
-            await Task.Delay(2000, ct);
+            await Task.Delay(2000);
             var random = new Random();
             string deviceType = RandomDeviceType(random);
             string deviceName = CreateName();
@@ -68,11 +66,11 @@ public class BtService : IBtService
         
     }
 
-    public async Task DeleteDevicesAsync(CancellationToken ct) // Метод для удаления устройств 
+    public async Task DeleteDevicesAsync() // Метод для удаления устройств 
     {
-        while (!ct.IsCancellationRequested)
+        while (true)
         {
-            await Task.Delay(13000, ct);
+            await Task.Delay(13000);
             if (_devices.Count == 0)
                 return;
             var random = new Random();
@@ -116,64 +114,7 @@ public class BtService : IBtService
     {
         return await Task.FromResult(_devices.ToImmutableList());
     }
-    /*public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
-    {
-        while (!ct.IsCancellationRequested)
-        {
-            // Если поисковый запрос пустой, возвращаем основной список устройств
-            if (string.IsNullOrWhiteSpace(searchTerm))
-            {
-                _serchedDevices = _devices.Count;
-                return await Task.FromResult(_devices.ToImmutableList());
-            }
-
-            if (searchTerm != _tempTerm)
-            {
-                // Выполняем поиск устройств
-                var result = _devices.Where(d =>
-                    d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
-                    d.DeviceType.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
-                // Обновляем количество найденных устройств
-                _serchedDevices = result.Count();
-                // Добавляем историю поиска
-                _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Поиск: введено-> \"{searchTerm}\", найдено {_serchedDevices} устройств");
-                _tempTerm = searchTerm;
-                _searchResult = [.. result];
-                _refreshHistory.Raise();
-                return await Task.FromResult(result.ToImmutableList());
-            }
-            return await Task.FromResult(_searchResult.ToImmutableList());
-        }
-        return await Task.FromResult(_searchResult.ToImmutableList());
-    }*/
-    /*
-    public async Task<ImmutableList<Device>> GetDevicesSearchAsync(string searchTerm, CancellationToken ct)
-    {
-        while(!ct.IsCancellationRequested)
-        // Если поисковый запрос пустой, возвращаем основной список устройств
-        if (string.IsNullOrWhiteSpace(searchTerm))
-        {
-            _serchedDevices = _devices.Count;
-           return await Task.FromResult(_devices.ToImmutableList());
-        }
-
-        if (searchTerm != _tempTerm)
-        {
-            // Выполняем поиск устройств
-            var result = _devices.Where(d =>
-                d.DeviceName.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase) ||
-                d.DeviceType.Contains(searchTerm, StringComparison.CurrentCultureIgnoreCase));
-            // Обновляем количество найденных устройств
-            _serchedDevices = result.Count();
-            // Добавляем историю поиска
-            _history.Insert(0, $"{DateTime.Now:H:mm:ss} || Поиск: введено-> \"{searchTerm}\", найдено {_serchedDevices} устройств");
-            _tempTerm = searchTerm;
-            _searchResult = [.. result];
-            _refreshHistory.Raise();
-            return await Task.FromResult(result.ToImmutableList());
-        }
-        return await Task.FromResult(_searchResult.ToImmutableList());
-    }*/
+    
     public async ValueTask<int> GetAllItems(CancellationToken ct)
     {
         

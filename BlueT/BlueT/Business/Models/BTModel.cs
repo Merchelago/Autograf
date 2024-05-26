@@ -7,10 +7,12 @@ namespace BlueT.Business.Models;
 public partial record BtModel()
 {
     readonly IBtService bt;
-    public BtModel(IBtService BtService):this()
+   
+    public BtModel(IBtService BtService) :this()
     {
         bt = BtService;
         Search.ForEachAsync(async (_, ct) => new ValueTask(bt.Refresh(await Search, ct)));
+        
     }
 
     public IListFeed<Device> Devices => ListFeed.Async(async ct => await bt.ScanDevicesAsync(ct), bt.RefreshList);
@@ -18,9 +20,11 @@ public partial record BtModel()
     public IListFeed<Device> DevicesSearch => ListFeed.Async(async ct => await bt.GetDevicesSearchAsync(ct), bt.RefreshList)
         .Where(
                 dev => 
-                    dev.DeviceName.Contains(Search.Value(CancellationToken.None).Result, StringComparison.CurrentCultureIgnoreCase)
+                    dev.DeviceName.Contains(Search.Value(CancellationToken.None).Result,
+                        StringComparison.CurrentCultureIgnoreCase)
                     ||
-                    dev.DeviceType.Contains(Search.Value(CancellationToken.None).Result, StringComparison.CurrentCultureIgnoreCase)
+                    dev.DeviceType.Contains(Search.Value(CancellationToken.None).Result,
+                        StringComparison.CurrentCultureIgnoreCase)
         );
 
     public IListFeed<string> GetHistory => ListFeed.Async(async ct => await bt.GetHistoryAsync(ct), bt.RefreshHistory);
