@@ -43,8 +43,7 @@ public class BtService : IBtService
             
         }, ct);
     }
-    
-       
+          
     public async Task CreateDevicesAsync() // Метод для создания устройств 
     {
         while (true)
