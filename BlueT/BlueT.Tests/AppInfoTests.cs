@@ -1,6 +1,9 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Uno.Extensions.Reactive.Testing;
+
 namespace BlueT.Tests;
 
-public class AppInfoTests
+public class AppInfoTests : FeedTests
 {
     [SetUp]
     public void Setup()
@@ -12,4 +15,5 @@ public class AppInfoTests
     {
         
     }
+   
 }

@@ -1,11 +1,8 @@
-using System.Globalization;
-using System.Runtime.CompilerServices;
-
 namespace BlueT.Services;
 public partial record Device(int Id, string DeviceName, string DeviceType);
 public class BtService : IBtService
 {
-    
+
     private int nameId; // Имя устройства
     private readonly int _allDevices = 50; // кол-во устройств
     private int _serchedDevices = 0; // кол-во найденных устройств
@@ -48,7 +45,7 @@ public class BtService : IBtService
     {
         while (true)
         {
-            if (_devices.Count == _allDevices) continue;
+            if (_devices.Count == _allDevices) { await Task.Delay(2000); continue; };
             await Task.Delay(2000);
             var random = new Random();
             string deviceType = RandomDeviceType(random);
@@ -61,8 +58,10 @@ public class BtService : IBtService
             _refreshList.Raise();
             _refreshHistory.Raise();
             _refreshDeletedCreatedDevice.Raise();
+            
+
         }
-        
+
     }
 
     public async Task DeleteDevicesAsync() // Метод для удаления устройств 
